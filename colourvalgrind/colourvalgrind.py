@@ -26,7 +26,7 @@ def init_filters():
     for f in Filter.__subclasses__():
         f()
 
-def prefix(match):
+def _prefix(match):
     return Fore.LIGHTBLACK_EX + match.group('prefix') + Fore.RESET
 
 class ByAt(Filter):
@@ -38,7 +38,7 @@ class ByAt(Filter):
                        r"$")
 
     def filter(self, match):
-        output = prefix(match)
+        output = _prefix(match)
         output += Fore.YELLOW + match.group('byat')
         output += Fore.RESET + match.group('func')
 
@@ -65,11 +65,13 @@ class ByAt(Filter):
 
 class Summary(Filter):
     regex = re.compile(r"^"
-                       r"(?P<prefix>==\d+== )(?P<header>.+?:)(?P<text>.*)"
+                       r"(?P<prefix>==\d+== )"
+                       r"(?P<header>.+?:)"
+                       r"(?P<text>.*)"
                        r"$")
 
     def filter(self, match):
-        output = prefix(match)
+        output = _prefix(match)
         header = match.group('header')
         if re.match(r"^[A-Z ]+:$", header):
             output += Fore.LIGHTGREEN_EX + header
@@ -90,7 +92,7 @@ class Error(Filter):
                        r"$")
 
     def filter(self, match):
-        output = prefix(match)
+        output = _prefix(match)
         output += Fore.LIGHTRED_EX + Style.BRIGHT + match.group('error')
 
         output += Style.RESET_ALL
@@ -103,7 +105,7 @@ class Info(Filter):
                        r"$")
 
     def filter(self, match):
-        output = prefix(match)
+        output = _prefix(match)
         output += Fore.LIGHTBLUE_EX + Style.BRIGHT + match.group('info')
 
         output += Style.RESET_ALL
@@ -115,7 +117,7 @@ class Blank(Filter):
                        r"$")
 
     def filter(self, match):
-        output = prefix(match)
+        output = _prefix(match)
         return output
 
 _PROGRAM = 0
@@ -123,7 +125,7 @@ _VALGRIND = 1
 _prev_output = _VALGRIND
 _curr_output = _VALGRIND
 
-def get_terminal_size():
+def _get_terminal_size():
     import fcntl, termios, struct
     h, w, hp, wp = struct.unpack('HHHH',
         fcntl.ioctl(0, termios.TIOCGWINSZ,
@@ -141,7 +143,7 @@ def colour_valgrind(output):
         _curr_output = _VALGRIND
 
     if _curr_output != _prev_output:
-        print Fore.LIGHTBLACK_EX + "="*get_terminal_size()[0] + Style.RESET_ALL
+        print Fore.LIGHTBLACK_EX + "="*_get_terminal_size()[0] + Style.RESET_ALL
 
     # abort if the line isn't from valgrind
     if _curr_output == _PROGRAM:
@@ -157,16 +159,3 @@ def colour_valgrind(output):
     return output
 
 init_filters()
-
-if __name__ == "__main__":
-    import argparse
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-i", "--input",
-                        help="valgrind log file to run through colour filters",
-                        required=True)
-    args = parser.parse_args()
-    
-    with open(args.input) as f:
-        for line in f:
-            print(colour_valgrind(line))
-

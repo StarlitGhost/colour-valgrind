@@ -3,18 +3,38 @@ try:
 except ImportError:
     from distutils.core import setup
 
+def readme():
+    with open('README.md') as f:
+        return f.read()
+
 config = {
+    'name': 'colour-valgrind',
+    'version': '0.1',
     'description': 'Wraps Valgrind to colour the output.',
+    'long_description': readme(),
     'author': 'Matthew Cox',
     'url': 'http://github.com/MatthewCox/colour-valgrind',
-    'download_url': '<download url>',
     'author_email': 'matthewcpcox@gmail.com',
-    'version': '0.1',
-    'install_requires': ['colorama'],
-    'packages': ['colour-valgrind'],
-    'scripts': [],
-    'name': 'colour-valgrind'
+    'classifiers': [
+        'Development Status :: 3 - Alpha',
+        'Environment :: Console',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python :: 2.7',
+        'Topic :: Software Development :: Debuggers',
+        'Topic :: Text Processing :: Filters',
+        'Topic :: Utilities',
+        ],
+    'keywords': 'valgrind color colour filter',
+    'license': 'MIT',
+    'packages': ['colourvalgrind'],
+    'install_requires': [
+        'colorama',
+        ],
+    'entry_points': {
+        'console_scripts': ['colour-valgrind=colourvalgrind.command_line:main'],
+        },
+    'include_package_data': True,
 }
 
 setup(**config)
-
