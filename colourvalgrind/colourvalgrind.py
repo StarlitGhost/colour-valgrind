@@ -122,8 +122,8 @@ class Blank(Filter):
 
 _PROGRAM = 0
 _VALGRIND = 1
-_prev_output = _VALGRIND
-_curr_output = _VALGRIND
+_prev_output = None
+_curr_output = None
 
 def _get_terminal_size():
     import fcntl, termios, struct
@@ -142,7 +142,7 @@ def colour_valgrind(output):
     else:
         _curr_output = _VALGRIND
 
-    if _curr_output != _prev_output:
+    if _prev_output is not None and _curr_output != _prev_output:
         print Fore.LIGHTBLACK_EX + "="*_get_terminal_size()[0] + Style.RESET_ALL
 
     # abort if the line isn't from valgrind
