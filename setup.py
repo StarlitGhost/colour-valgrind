@@ -10,7 +10,7 @@ config = {
     'download_url': '<download url>',
     'author_email': 'matthewcpcox@gmail.com',
     'version': '0.1',
-    'install_requires': ['nose', 'colorama'],
+    'install_requires': ['colorama'],
     'packages': ['colour-valgrind'],
     'scripts': [],
     'name': 'colour-valgrind'
