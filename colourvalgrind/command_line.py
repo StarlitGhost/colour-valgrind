@@ -2,17 +2,27 @@
 
 from colourvalgrind import colour_valgrind
 
-def main():
-    import argparse
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-i", "--input",
-                        help="valgrind log file to run through colour filters",
-                        required=True)
-    args = parser.parse_args()
+import argparse
+import subprocess
+import sys
 
-    with open(args.input) as f:
-        for line in f:
-            print(colour_valgrind(line))
+def main():
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument("-t", "--test",
+                        help="valgrind log file to run through colour filters",
+                        default=None)
+    args, valgrind_args = parser.parse_known_args()
+
+    if args.test:
+        with open(args.test) as f:
+            for line in f:
+                print(colour_valgrind(line))
+    else:
+        cmd = ['valgrind']
+        cmd.extend(valgrind_args)
+        s = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        for line in iter(s.stdout.readline, b''):
+            print(colour_valgrind(line.rstrip('\n')))
 
 if __name__ == "__main__":
     main()
