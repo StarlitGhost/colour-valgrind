@@ -9,7 +9,7 @@ def readme():
 
 config = {
     'name': 'colour-valgrind',
-    'version': '0.1',
+    'version': '0.2',
     'description': 'Wraps Valgrind to colour the output.',
     'long_description': readme(),
     'author': 'Matthew Cox',
