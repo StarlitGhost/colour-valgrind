@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import re
+import regex as re
 from collections import OrderedDict
 
 from colorama import Fore, Back, Style
@@ -40,7 +40,9 @@ class ByAt(Filter):
     def filter(self, match):
         output = _prefix(match)
         output += Fore.YELLOW + match.group('byat')
-        output += Fore.RESET + match.group('func')
+
+        func = self.func_signature(match.group('func'))
+        output += Fore.RESET + func
 
         if match.group('loc'):
             loc = match.group('loc')
@@ -62,6 +64,132 @@ class ByAt(Filter):
 
         output += Style.RESET_ALL
         return output
+
+    def func_signature(self, func):
+        cpp_grammar = (
+r"(?(DEFINE)"
+r"  (?P<_ID_>               [A-Za-z_][A-Za-z0-9_]* )"
+r"  (?P<_TYPENAME_>         (?: typename ) )"
+r"  (?P<_CV_QUALIFIER_>     (?: const | volatile ) )"
+r"  (?P<_NAMESPACE_>        (?:\:\:)? (?:(?&_ID_) (?&_TEMPLATE_)? \:\:)+ )"
+r"  (?P<_OPERATOR_>         (?: \& | \&\& | \* | \*\* ) )"
+r"  (?P<_DEPENDENT_>        (?:\:\:(?&_ID_))+ )"
+r"  (?P<_TEMPLATE_>         < \s* (?&_TEMPLATE_ARGLIST_)? \s* > )"
+r"  (?P<_VOID_TYPE_>        void )"
+r"  (?P<_BOOL_TYPE_>        bool )"
+r"  (?P<_NULLPTR_TYPE_>     nullptr_t )"
+r"  (?P<_SIGN_>             (?: signed | unsigned ) )"
+r"  (?P<_CHAR_TYPE_>        (?:"
+r"                           (?: (?&_SIGN_) \s+ )? char"
+r"                           |"
+r"                           wchar_t"
+r"                           |"
+r"                           char\d\d_t"
+r"                          ) )"
+r"  (?P<_INTEGRAL_TYPE_>    (?: (?&_SIGN_) \s+ )?"
+r"                          (?:"
+r"                           int"
+r"                           |"
+r"                           (?: short | long | long \s+ long )"
+r"                           |"
+r"                           (?: short | long | long \s+ long ) \s+ int"
+r"                          ) )"
+r"  (?P<_FLOAT_TYPE_>       (?: float | double | long \s+ double ) )"
+r"  (?P<_FUNDAMENTAL_TYPE_> (?:"
+r"                           (?&_VOID_TYPE_) | (?&_BOOL_TYPE_)"
+r"                           |"
+r"                           (?&_NULLPTR_TYPE_) | (?&_CHAR_TYPE_)"
+r"                           |"
+r"                           (?&_INTEGRAL_TYPE_) | (?&_FLOAT_TYPE_)"
+r"                          ) )"
+r"  (?P<_CLASS_TYPE_>       (?&_TYPENAME_)? (?&_NAMESPACE_)? (?&_ID_)"
+r"                           (?&_TEMPLATE_)? (?&_DEPENDENT_)? )"
+r"  (?P<_QUALIFIED_TYPE_>   (?: (?&_FUNDAMENTAL_TYPE_) | (?&_CLASS_TYPE_) )"
+r"                           (?: \s+ (?&_CV_QUALIFIER_) )? )"
+r"  (?P<_TYPE_>             (?: (?&_QUALIFIED_TYPE_) \s* (?&_OPERATOR_)? ) )"
+r"  (?P<_TYPELIST_>         (?&_TYPE_) (?: \s* , \s* (?&_TYPE_))* )"
+r"  (?P<_NUMERIC_LITERAL_>  (?:"
+r"                           (?:"
+r"                            [1-9][0-9]*"
+r"                            |"
+r"                            0[0-7]*"
+r"                            |"
+r"                            0[xX][0-9A-Fa-f]+"
+r"                            |"
+r"                            0[bB][01]+"
+r"                           )"
+r"                           (?: [uU] | [lL]{1,2} ){0,2}?"
+r"                          ) )"
+r"  (?P<_CAST_>             (?: \( (?&_TYPE_) \) ) )"
+r"  (?P<_TEMPLATE_ARG_>     (?: (?&_TYPE_) | (?&_CAST_)? (?&_NUMERIC_LITERAL_) ) )"
+r"  (?P<_TEMPLATE_ARGLIST_> (?&_TEMPLATE_ARG_) (?: \s* , \s* (?&_TEMPLATE_ARG_))* )"
+r")")
+
+        cpp_func_signature = re.compile(
+r" (?P<RETURN_TYPE> (?&_TYPE_) \s )?"
+r" \s*"
+r" (?P<NAMESPACE> (?&_NAMESPACE_) )?"
+r" (?P<NAME> (?&_ID_) )"
+r" \s*"
+r" (?:"
+r"   <\s* (?P<TEMPLATE_TYPE_LIST> (?&_TEMPLATE_ARG_) (?: \s* , \s* (?&_TEMPLATE_ARG_) )* )? \s*>"
+r" )?"
+r" \s*"
+r" \(\s* (?P<PARAMETER_TYPE_LIST> (?&_TYPE_) (?: \s* , \s* (?&_TYPE_) )* (?: \s* , \s* \.\.\. )? )? \s*\)"
+r" (?:"
+r"   (?P<QUALIFIER> \s+ (?&_CV_QUALIFIER_)? )"
+r" )?"
++ cpp_grammar, re.VERBOSE)
+
+        cpp_operator_overload = re.compile(
+r" (?:"
+r"   operator"
+r"   \s+"
+r"   (?P<NAME>"
+r"     [^\W]{1,3}"
+r"     |"
+r"     (?:new|delete) \s* (?:\[\])?"
+r"     |"
+r"     (?&_TYPE_)"
+r"   )"
+r" )"
+r" \s*"
+r" \(\s* (?P<PARAMETER_TYPE_LIST> (?&_TYPE_) (?: \s* , \s* (?&_TYPE_) )* )? \s*\)"
++ cpp_grammar, re.VERBOSE)
+
+        match = cpp_func_signature.match(func)
+        if match:
+            # C++ functions
+            if match.group('NAME'):
+                func = re.sub(re.escape(match.group('NAME')) + r"(?=\s*[\(<])",
+                              Fore.LIGHTCYAN_EX + Style.BRIGHT +
+                              match.group('NAME') +
+                              Style.RESET_ALL,
+                              func)
+            #if match.group('NAMESPACE'):
+            #    func = re.sub(match.group('NAMESPACE'),
+            #                  Fore.LIGHTWHITE_EX + match.group('NAMESPACE') +
+            #                  Style.RESET_ALL,
+            #                  func)
+            if match.group('QUALIFIER'):
+                func = re.sub(re.escape(match.group('QUALIFIER')),
+                              Fore.LIGHTGREEN_EX +
+                              match.group('QUALIFIER') +
+                              Style.RESET_ALL,
+                              func)
+        elif cpp_operator_overload.match(func):
+            # operator overloads
+            match = cpp_operator_overload.match(func)
+            func = re.sub(re.escape(match.group('NAME')),
+                          Fore.LIGHTCYAN_EX + Style.BRIGHT +
+                          match.group('NAME') +
+                          Style.RESET_ALL,
+                          func)
+        elif re.match(r"^[A-Za-z_][A-Za-z0-9_.]*$", func):
+            # C functions
+            func = Fore.LIGHTBLUE_EX + Style.BRIGHT + func + Style.RESET_ALL
+
+        return func
 
 class Summary(Filter):
     regex = re.compile(r"^"
