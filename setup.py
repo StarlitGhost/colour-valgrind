@@ -9,7 +9,7 @@ def readme():
 
 config = {
     'name': 'colour-valgrind',
-    'version': '0.2.1',
+    'version': '0.3.0',
     'description': 'Wraps Valgrind to colour the output.',
     'long_description': readme(),
     'author': 'Matthew Cox',
@@ -30,6 +30,7 @@ config = {
     'packages': ['colourvalgrind'],
     'install_requires': [
         'colorama',
+        'regex',
         ],
     'entry_points': {
         'console_scripts': ['colour-valgrind=colourvalgrind.command_line:main'],
