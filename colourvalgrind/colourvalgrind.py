@@ -53,7 +53,7 @@ class ByAt(Filter):
                 loc += Fore.MAGENTA + loc_m.group('line')
             loc_m = re.match(r"^(?P<in>in\s+)"
                              r"(?P<lib>.*\.(?:a|so|dylib|dll)"
-                                r"(?:(?:\.[0-9])+)?)$",
+                                r"(?:(?:\.[0-9]+)+)?)$",
                              loc)
             if loc_m:
                 loc = Fore.RESET + loc_m.group('in')
