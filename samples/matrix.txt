@@ -1,0 +1,94 @@
+==7690== Memcheck, a memory error detector
+==7690== Copyright (C) 2002-2013, and GNU GPL'd, by Julian Seward et al.
+==7690== Using Valgrind-3.10.0 and LibVEX; rerun with -h for copyright info
+==7690== Command: ./tp0 -i f14.pgm -f z -o ff14.pgm
+==7690== 
+==7690== 
+==7690== HEAP SUMMARY:
+==7690==     in use at exit: 160 bytes in 11 blocks
+==7690==   total heap usage: 45 allocs, 34 frees, 18,357 bytes allocated
+==7690== 
+==7690== 8 bytes in 1 blocks are still reachable in loss record 1 of 11
+==7690==    at 0x4C298A0: operator new[](unsigned long) (vg_replace_malloc.c:389)
+==7690==    by 0x404871: Matrix<Pixel>::Matrix(unsigned int, unsigned int) (matrix.hpp:44)
+==7690==    by 0x404471: PGMImage::PGMImage(unsigned int, unsigned int) (pgm_image.cpp:14)
+==7690==    by 0x405475: PGMParser::set_pgm_dimensions(std::vector<int, std::allocator<int> >) (pgm_parser.cpp:147)
+==7690==    by 0x4050CD: PGMParser::get_pgm() (pgm_parser.cpp:94)
+==7690==    by 0x404D67: PGMParser::PGMParser(std::string const&) (pgm_parser.cpp:25)
+==7690==    by 0x404212: main (main.cpp:52)
+==7690== 
+==7690== 8 bytes in 1 blocks are still reachable in loss record 2 of 11
+==7690==    at 0x4C298A0: operator new[](unsigned long) (vg_replace_malloc.c:389)
+==7690==    by 0x403703: Matrix<Complex>::Matrix(unsigned int, unsigned int) (matrix.hpp:44)
+==7690==    by 0x4024A5: PGMTransformation::PGMTransformation(PGMImage const&, std::string const&) (PGMTransformation.cpp:49)
+==7690==    by 0x404240: main (main.cpp:55)
+==7690== 
+==7690== 8 bytes in 1 blocks are still reachable in loss record 3 of 11
+==7690==    at 0x4C298A0: operator new[](unsigned long) (vg_replace_malloc.c:389)
+==7690==    by 0x4049C9: Matrix<Pixel>::Matrix(Matrix<Pixel> const&) (matrix.hpp:56)
+==7690==    by 0x404579: PGMImage::PGMImage(PGMImage const&) (pgm_image.cpp:31)
+==7690==    by 0x4024DD: PGMTransformation::PGMTransformation(PGMImage const&, std::string const&) (PGMTransformation.cpp:57)
+==7690==    by 0x404240: main (main.cpp:55)
+==7690== 
+==7690== 12 bytes in 1 blocks are still reachable in loss record 4 of 11
+==7690==    at 0x4C298A0: operator new[](unsigned long) (vg_replace_malloc.c:389)
+==7690==    by 0x4048B4: Matrix<Pixel>::Matrix(unsigned int, unsigned int) (matrix.hpp:46)
+==7690==    by 0x404471: PGMImage::PGMImage(unsigned int, unsigned int) (pgm_image.cpp:14)
+==7690==    by 0x405475: PGMParser::set_pgm_dimensions(std::vector<int, std::allocator<int> >) (pgm_parser.cpp:147)
+==7690==    by 0x4050CD: PGMParser::get_pgm() (pgm_parser.cpp:94)
+==7690==    by 0x404D67: PGMParser::PGMParser(std::string const&) (pgm_parser.cpp:25)
+==7690==    by 0x404212: main (main.cpp:52)
+==7690== 
+==7690== 12 bytes in 1 blocks are still reachable in loss record 5 of 11
+==7690==    at 0x4C298A0: operator new[](unsigned long) (vg_replace_malloc.c:389)
+==7690==    by 0x404A15: Matrix<Pixel>::Matrix(Matrix<Pixel> const&) (matrix.hpp:59)
+==7690==    by 0x404579: PGMImage::PGMImage(PGMImage const&) (pgm_image.cpp:31)
+==7690==    by 0x4024DD: PGMTransformation::PGMTransformation(PGMImage const&, std::string const&) (PGMTransformation.cpp:57)
+==7690==    by 0x404240: main (main.cpp:55)
+==7690== 
+==7690== 16 bytes in 1 blocks are still reachable in loss record 6 of 11
+==7690==    at 0x4C29180: operator new(unsigned long) (vg_replace_malloc.c:324)
+==7690==    by 0x40445E: PGMImage::PGMImage(unsigned int, unsigned int) (pgm_image.cpp:14)
+==7690==    by 0x405475: PGMParser::set_pgm_dimensions(std::vector<int, std::allocator<int> >) (pgm_parser.cpp:147)
+==7690==    by 0x4050CD: PGMParser::get_pgm() (pgm_parser.cpp:94)
+==7690==    by 0x404D67: PGMParser::PGMParser(std::string const&) (pgm_parser.cpp:25)
+==7690==    by 0x404212: main (main.cpp:52)
+==7690== 
+==7690== 16 bytes in 1 blocks are still reachable in loss record 7 of 11
+==7690==    at 0x4C29180: operator new(unsigned long) (vg_replace_malloc.c:324)
+==7690==    by 0x40248A: PGMTransformation::PGMTransformation(PGMImage const&, std::string const&) (PGMTransformation.cpp:49)
+==7690==    by 0x404240: main (main.cpp:55)
+==7690== 
+==7690== 16 bytes in 1 blocks are still reachable in loss record 8 of 11
+==7690==    at 0x4C298A0: operator new[](unsigned long) (vg_replace_malloc.c:389)
+==7690==    by 0x403740: Matrix<Complex>::Matrix(unsigned int, unsigned int) (matrix.hpp:46)
+==7690==    by 0x4024A5: PGMTransformation::PGMTransformation(PGMImage const&, std::string const&) (PGMTransformation.cpp:49)
+==7690==    by 0x404240: main (main.cpp:55)
+==7690== 
+==7690== 16 bytes in 1 blocks are still reachable in loss record 9 of 11
+==7690==    at 0x4C29180: operator new(unsigned long) (vg_replace_malloc.c:324)
+==7690==    by 0x404564: PGMImage::PGMImage(PGMImage const&) (pgm_image.cpp:31)
+==7690==    by 0x4024DD: PGMTransformation::PGMTransformation(PGMImage const&, std::string const&) (PGMTransformation.cpp:57)
+==7690==    by 0x404240: main (main.cpp:55)
+==7690== 
+==7690== 24 bytes in 1 blocks are still reachable in loss record 10 of 11
+==7690==    at 0x4C29180: operator new(unsigned long) (vg_replace_malloc.c:324)
+==7690==    by 0x405464: PGMParser::set_pgm_dimensions(std::vector<int, std::allocator<int> >) (pgm_parser.cpp:147)
+==7690==    by 0x4050CD: PGMParser::get_pgm() (pgm_parser.cpp:94)
+==7690==    by 0x404D67: PGMParser::PGMParser(std::string const&) (pgm_parser.cpp:25)
+==7690==    by 0x404212: main (main.cpp:52)
+==7690== 
+==7690== 24 bytes in 1 blocks are still reachable in loss record 11 of 11
+==7690==    at 0x4C29180: operator new(unsigned long) (vg_replace_malloc.c:324)
+==7690==    by 0x4024CB: PGMTransformation::PGMTransformation(PGMImage const&, std::string const&) (PGMTransformation.cpp:57)
+==7690==    by 0x404240: main (main.cpp:55)
+==7690== 
+==7690== LEAK SUMMARY:
+==7690==    definitely lost: 0 bytes in 0 blocks
+==7690==    indirectly lost: 0 bytes in 0 blocks
+==7690==      possibly lost: 0 bytes in 0 blocks
+==7690==    still reachable: 160 bytes in 11 blocks
+==7690==         suppressed: 0 bytes in 0 blocks
+==7690== 
+==7690== For counts of detected and suppressed errors, rerun with: -v
+==7690== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

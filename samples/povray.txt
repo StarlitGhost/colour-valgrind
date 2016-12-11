@@ -1,0 +1,215 @@
+==13467== Memcheck, a memory error detector
+==13467== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==13467== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==13467== Command: dpovray +W4596 +H1003 +Ispiral.pov +Ospiral.png +D +WT1 +RP5
+==13467== Parent PID: 4686
+==13467== 
+==13467== Thread 3:
+==13467== Syscall param write(buf) points to uninitialised byte(s)
+==13467==    at 0x722C71D: ??? (syscall-template.S:81)
+==13467==    by 0x71BA242: _IO_file_write@@GLIBC_2.2.5 (fileops.c:1262)
+==13467==    by 0x71BA121: new_do_write (fileops.c:538)
+==13467==    by 0x71BB854: _IO_do_write@@GLIBC_2.2.5 (fileops.c:511)
+==13467==    by 0x71BA7DF: _IO_file_sync@@GLIBC_2.2.5 (fileops.c:892)
+==13467==    by 0x71AEE9A: fflush (iofflush.c:41)
+==13467==    by 0x5697D1: pov_base::IOBase::flush() (fileinputoutput.cpp:230)
+==13467==    by 0x56504C: pov_frontend::RenderFrontendBase::NewBackup(POVMS_Object&, pov_frontend::ViewData&, pov_base::Path const&) (fileinputoutput.h:249)
+==13467==    by 0x447C29: pov_frontend::RenderFrontend<vfe::vfeParserMessageHandler, pov_frontend::FileMessageHandler, vfe::vfeRenderMessageHandler, pov_frontend::ImageMessageHandler>::StartRender(pov_frontend::RenderFrontendBase::Id, POVMS_Object&) (renderfrontend.h:734)
+==13467==    by 0x444D70: vfe::VirtualFrontEnd::Process() (vfe.cpp:1123)
+==13467==    by 0x421DDA: vfe::vfeSession::ProcessFrontend() (vfesession.cpp:556)
+==13467==    by 0x42748A: vfe::vfeSession::WorkerThread() (vfesession.cpp:669)
+==13467==  Address 0x4025020 is not stack'd, malloc'd or (recently) free'd
+==13467== 
+==13467== Invalid read of size 1
+==13467==    at 0x41B525: pov_frontend::UnixSDLDisplay::SetPixelScaled(unsigned int, unsigned int, pov_frontend::Display::RGBA8 const&) (disp_sdl.cpp:356)
+==13467==    by 0x419197: pov_frontend::UnixSDLDisplay::DrawPixelBlock(unsigned int, unsigned int, unsigned int, unsigned int, pov_frontend::Display::RGBA8 const*) (disp_sdl.cpp:551)
+==13467==    by 0x55F03D: pov_frontend::ImageMessageHandler::DrawPixelBlockSet(pov_frontend::SceneData const&, pov_frontend::ViewData const&, POVMS_Object&) (imagemessagehandler.cpp:267)
+==13467==    by 0x44E11F: pov_frontend::RenderFrontend<vfe::vfeParserMessageHandler, pov_frontend::FileMessageHandler, vfe::vfeRenderMessageHandler, pov_frontend::ImageMessageHandler>::HandleImageMessage(pov_frontend::RenderFrontendBase::Id, unsigned int, POVMS_Object&) (renderfrontend.h:874)
+==13467==    by 0x55F55F: pov_frontend::RenderFrontendBase::HandleMessage(POVMS_Message&, POVMS_Message&, int) (renderfrontend.cpp:632)
+==13467==    by 0x5A8C90: POVMS_MessageReceiver::ReceiveHandler(POVMSData*, POVMSData*, int, void*) (povmscpp.cpp:1773)
+==13467==    by 0x572726: POVMS_Receive(void*, POVMSData*, POVMSData*, int) (povms.cpp:961)
+==13467==    by 0x575FC6: POVMS_ProcessMessages(void*, bool, bool) (povms.cpp:691)
+==13467==    by 0x427475: vfe::vfeSession::WorkerThread() (vfesession.cpp:666)
+==13467==    by 0x64FA949: ??? (in /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.53.0)
+==13467==    by 0x6F2AF6D: start_thread (pthread_create.c:311)
+==13467==    by 0x723A9CC: clone (clone.S:113)
+==13467==  Address 0x1e7c8422 is not stack'd, malloc'd or (recently) free'd
+==13467== 
+==13467== Invalid read of size 1
+==13467==    at 0x41B53E: pov_frontend::UnixSDLDisplay::SetPixelScaled(unsigned int, unsigned int, pov_frontend::Display::RGBA8 const&) (disp_sdl.cpp:357)
+==13467==    by 0x419197: pov_frontend::UnixSDLDisplay::DrawPixelBlock(unsigned int, unsigned int, unsigned int, unsigned int, pov_frontend::Display::RGBA8 const*) (disp_sdl.cpp:551)
+==13467==    by 0x55F03D: pov_frontend::ImageMessageHandler::DrawPixelBlockSet(pov_frontend::SceneData const&, pov_frontend::ViewData const&, POVMS_Object&) (imagemessagehandler.cpp:267)
+==13467==    by 0x44E11F: pov_frontend::RenderFrontend<vfe::vfeParserMessageHandler, pov_frontend::FileMessageHandler, vfe::vfeRenderMessageHandler, pov_frontend::ImageMessageHandler>::HandleImageMessage(pov_frontend::RenderFrontendBase::Id, unsigned int, POVMS_Object&) (renderfrontend.h:874)
+==13467==    by 0x55F55F: pov_frontend::RenderFrontendBase::HandleMessage(POVMS_Message&, POVMS_Message&, int) (renderfrontend.cpp:632)
+==13467==    by 0x5A8C90: POVMS_MessageReceiver::ReceiveHandler(POVMSData*, POVMSData*, int, void*) (povmscpp.cpp:1773)
+==13467==    by 0x572726: POVMS_Receive(void*, POVMSData*, POVMSData*, int) (povms.cpp:961)
+==13467==    by 0x575FC6: POVMS_ProcessMessages(void*, bool, bool) (povms.cpp:691)
+==13467==    by 0x427475: vfe::vfeSession::WorkerThread() (vfesession.cpp:666)
+==13467==    by 0x64FA949: ??? (in /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.53.0)
+==13467==    by 0x6F2AF6D: start_thread (pthread_create.c:311)
+==13467==    by 0x723A9CC: clone (clone.S:113)
+==13467==  Address 0x1e7c8422 is not stack'd, malloc'd or (recently) free'd
+==13467== 
+==13467== Invalid read of size 1
+==13467==    at 0x41B568: pov_frontend::UnixSDLDisplay::SetPixelScaled(unsigned int, unsigned int, pov_frontend::Display::RGBA8 const&) (disp_sdl.cpp:358)
+==13467==    by 0x419197: pov_frontend::UnixSDLDisplay::DrawPixelBlock(unsigned int, unsigned int, unsigned int, unsigned int, pov_frontend::Display::RGBA8 const*) (disp_sdl.cpp:551)
+==13467==    by 0x55F03D: pov_frontend::ImageMessageHandler::DrawPixelBlockSet(pov_frontend::SceneData const&, pov_frontend::ViewData const&, POVMS_Object&) (imagemessagehandler.cpp:267)
+==13467==    by 0x44E11F: pov_frontend::RenderFrontend<vfe::vfeParserMessageHandler, pov_frontend::FileMessageHandler, vfe::vfeRenderMessageHandler, pov_frontend::ImageMessageHandler>::HandleImageMessage(pov_frontend::RenderFrontendBase::Id, unsigned int, POVMS_Object&) (renderfrontend.h:874)
+==13467==    by 0x55F55F: pov_frontend::RenderFrontendBase::HandleMessage(POVMS_Message&, POVMS_Message&, int) (renderfrontend.cpp:632)
+==13467==    by 0x5A8C90: POVMS_MessageReceiver::ReceiveHandler(POVMSData*, POVMSData*, int, void*) (povmscpp.cpp:1773)
+==13467==    by 0x572726: POVMS_Receive(void*, POVMSData*, POVMSData*, int) (povms.cpp:961)
+==13467==    by 0x575FC6: POVMS_ProcessMessages(void*, bool, bool) (povms.cpp:691)
+==13467==    by 0x427475: vfe::vfeSession::WorkerThread() (vfesession.cpp:666)
+==13467==    by 0x64FA949: ??? (in /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.53.0)
+==13467==    by 0x6F2AF6D: start_thread (pthread_create.c:311)
+==13467==    by 0x723A9CC: clone (clone.S:113)
+==13467==  Address 0x1e7c8422 is not stack'd, malloc'd or (recently) free'd
+==13467== 
+==13467== Invalid read of size 1
+==13467==    at 0x41B586: pov_frontend::UnixSDLDisplay::SetPixelScaled(unsigned int, unsigned int, pov_frontend::Display::RGBA8 const&) (disp_sdl.cpp:359)
+==13467==    by 0x419197: pov_frontend::UnixSDLDisplay::DrawPixelBlock(unsigned int, unsigned int, unsigned int, unsigned int, pov_frontend::Display::RGBA8 const*) (disp_sdl.cpp:551)
+==13467==    by 0x55F03D: pov_frontend::ImageMessageHandler::DrawPixelBlockSet(pov_frontend::SceneData const&, pov_frontend::ViewData const&, POVMS_Object&) (imagemessagehandler.cpp:267)
+==13467==    by 0x44E11F: pov_frontend::RenderFrontend<vfe::vfeParserMessageHandler, pov_frontend::FileMessageHandler, vfe::vfeRenderMessageHandler, pov_frontend::ImageMessageHandler>::HandleImageMessage(pov_frontend::RenderFrontendBase::Id, unsigned int, POVMS_Object&) (renderfrontend.h:874)
+==13467==    by 0x55F55F: pov_frontend::RenderFrontendBase::HandleMessage(POVMS_Message&, POVMS_Message&, int) (renderfrontend.cpp:632)
+==13467==    by 0x5A8C90: POVMS_MessageReceiver::ReceiveHandler(POVMSData*, POVMSData*, int, void*) (povmscpp.cpp:1773)
+==13467==    by 0x572726: POVMS_Receive(void*, POVMSData*, POVMSData*, int) (povms.cpp:961)
+==13467==    by 0x575FC6: POVMS_ProcessMessages(void*, bool, bool) (povms.cpp:691)
+==13467==    by 0x427475: vfe::vfeSession::WorkerThread() (vfesession.cpp:666)
+==13467==    by 0x64FA949: ??? (in /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.53.0)
+==13467==    by 0x6F2AF6D: start_thread (pthread_create.c:311)
+==13467==    by 0x723A9CC: clone (clone.S:113)
+==13467==  Address 0x1e7c8422 is not stack'd, malloc'd or (recently) free'd
+==13467== 
+==13467== Invalid read of size 1
+==13467==    at 0x41B5D9: pov_frontend::UnixSDLDisplay::SetPixelScaled(unsigned int, unsigned int, pov_frontend::Display::RGBA8 const&) (disp_sdl.cpp:390)
+==13467==    by 0x419197: pov_frontend::UnixSDLDisplay::DrawPixelBlock(unsigned int, unsigned int, unsigned int, unsigned int, pov_frontend::Display::RGBA8 const*) (disp_sdl.cpp:551)
+==13467==    by 0x55F03D: pov_frontend::ImageMessageHandler::DrawPixelBlockSet(pov_frontend::SceneData const&, pov_frontend::ViewData const&, POVMS_Object&) (imagemessagehandler.cpp:267)
+==13467==    by 0x44E11F: pov_frontend::RenderFrontend<vfe::vfeParserMessageHandler, pov_frontend::FileMessageHandler, vfe::vfeRenderMessageHandler, pov_frontend::ImageMessageHandler>::HandleImageMessage(pov_frontend::RenderFrontendBase::Id, unsigned int, POVMS_Object&) (renderfrontend.h:874)
+==13467==    by 0x55F55F: pov_frontend::RenderFrontendBase::HandleMessage(POVMS_Message&, POVMS_Message&, int) (renderfrontend.cpp:632)
+==13467==    by 0x5A8C90: POVMS_MessageReceiver::ReceiveHandler(POVMSData*, POVMSData*, int, void*) (povmscpp.cpp:1773)
+==13467==    by 0x572726: POVMS_Receive(void*, POVMSData*, POVMSData*, int) (povms.cpp:961)
+==13467==    by 0x575FC6: POVMS_ProcessMessages(void*, bool, bool) (povms.cpp:691)
+==13467==    by 0x427475: vfe::vfeSession::WorkerThread() (vfesession.cpp:666)
+==13467==    by 0x64FA949: ??? (in /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.53.0)
+==13467==    by 0x6F2AF6D: start_thread (pthread_create.c:311)
+==13467==    by 0x723A9CC: clone (clone.S:113)
+==13467==  Address 0x1e7c8422 is not stack'd, malloc'd or (recently) free'd
+==13467== 
+==13467== Invalid read of size 4
+==13467==    at 0x41B4FA: pov_frontend::UnixSDLDisplay::SetPixelScaled(unsigned int, unsigned int, pov_frontend::Display::RGBA8 const&) (disp_sdl.cpp:353)
+==13467==    by 0x419197: pov_frontend::UnixSDLDisplay::DrawPixelBlock(unsigned int, unsigned int, unsigned int, unsigned int, pov_frontend::Display::RGBA8 const*) (disp_sdl.cpp:551)
+==13467==    by 0x55F03D: pov_frontend::ImageMessageHandler::DrawPixelBlockSet(pov_frontend::SceneData const&, pov_frontend::ViewData const&, POVMS_Object&) (imagemessagehandler.cpp:267)
+==13467==    by 0x44E11F: pov_frontend::RenderFrontend<vfe::vfeParserMessageHandler, pov_frontend::FileMessageHandler, vfe::vfeRenderMessageHandler, pov_frontend::ImageMessageHandler>::HandleImageMessage(pov_frontend::RenderFrontendBase::Id, unsigned int, POVMS_Object&) (renderfrontend.h:874)
+==13467==    by 0x55F55F: pov_frontend::RenderFrontendBase::HandleMessage(POVMS_Message&, POVMS_Message&, int) (renderfrontend.cpp:632)
+==13467==    by 0x5A8C90: POVMS_MessageReceiver::ReceiveHandler(POVMSData*, POVMSData*, int, void*) (povmscpp.cpp:1773)
+==13467==    by 0x572726: POVMS_Receive(void*, POVMSData*, POVMSData*, int) (povms.cpp:961)
+==13467==    by 0x575FC6: POVMS_ProcessMessages(void*, bool, bool) (povms.cpp:691)
+==13467==    by 0x427475: vfe::vfeSession::WorkerThread() (vfesession.cpp:666)
+==13467==    by 0x64FA949: ??? (in /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.53.0)
+==13467==    by 0x6F2AF6D: start_thread (pthread_create.c:311)
+==13467==    by 0x723A9CC: clone (clone.S:113)
+==13467==  Address 0x1e4baff0 is not stack'd, malloc'd or (recently) free'd
+==13467== 
+==13467== Invalid write of size 4
+==13467==    at 0x41B5D2: pov_frontend::UnixSDLDisplay::SetPixelScaled(unsigned int, unsigned int, pov_frontend::Display::RGBA8 const&) (disp_sdl.cpp:386)
+==13467==    by 0x419197: pov_frontend::UnixSDLDisplay::DrawPixelBlock(unsigned int, unsigned int, unsigned int, unsigned int, pov_frontend::Display::RGBA8 const*) (disp_sdl.cpp:551)
+==13467==    by 0x55F03D: pov_frontend::ImageMessageHandler::DrawPixelBlockSet(pov_frontend::SceneData const&, pov_frontend::ViewData const&, POVMS_Object&) (imagemessagehandler.cpp:267)
+==13467==    by 0x44E11F: pov_frontend::RenderFrontend<vfe::vfeParserMessageHandler, pov_frontend::FileMessageHandler, vfe::vfeRenderMessageHandler, pov_frontend::ImageMessageHandler>::HandleImageMessage(pov_frontend::RenderFrontendBase::Id, unsigned int, POVMS_Object&) (renderfrontend.h:874)
+==13467==    by 0x55F55F: pov_frontend::RenderFrontendBase::HandleMessage(POVMS_Message&, POVMS_Message&, int) (renderfrontend.cpp:632)
+==13467==    by 0x5A8C90: POVMS_MessageReceiver::ReceiveHandler(POVMSData*, POVMSData*, int, void*) (povmscpp.cpp:1773)
+==13467==    by 0x572726: POVMS_Receive(void*, POVMSData*, POVMSData*, int) (povms.cpp:961)
+==13467==    by 0x575FC6: POVMS_ProcessMessages(void*, bool, bool) (povms.cpp:691)
+==13467==    by 0x427475: vfe::vfeSession::WorkerThread() (vfesession.cpp:666)
+==13467==    by 0x64FA949: ??? (in /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.53.0)
+==13467==    by 0x6F2AF6D: start_thread (pthread_create.c:311)
+==13467==    by 0x723A9CC: clone (clone.S:113)
+==13467==  Address 0x1e4baff0 is not stack'd, malloc'd or (recently) free'd
+==13467== 
+--13467-- VALGRIND INTERNAL ERROR: Valgrind received a signal 11 (SIGSEGV) - exiting
+--13467-- si_code=80;  Faulting address: 0x0;  sp: 0x407ed6d70
+
+valgrind: the 'impossible' happened:
+   Killed by fatal signal
+==13467==    at 0x38062B4E: ??? (in /usr/lib/valgrind/memcheck-amd64-linux)
+==13467==    by 0x3806486F: ??? (in /usr/lib/valgrind/memcheck-amd64-linux)
+==13467==    by 0x3802ACF5: ??? (in /usr/lib/valgrind/memcheck-amd64-linux)
+==13467==    by 0x3802B2FB: ??? (in /usr/lib/valgrind/memcheck-amd64-linux)
+==13467==    by 0x3802B4C2: ??? (in /usr/lib/valgrind/memcheck-amd64-linux)
+==13467==    by 0x3809D58D: ??? (in /usr/lib/valgrind/memcheck-amd64-linux)
+==13467==    by 0x380AC14C: ??? (in /usr/lib/valgrind/memcheck-amd64-linux)
+==13467==    by 0x380AC50A: ??? (in /usr/lib/valgrind/memcheck-amd64-linux)
+==13467==    by 0x380C7C0D: ??? (in /usr/lib/valgrind/memcheck-amd64-linux)
+==13467==    by 0xDEADBEEFDEADBEEE: ???
+==13467==    by 0xDEADBEEFDEADBEEE: ???
+==13467==    by 0xDEADBEEFDEADBEEE: ???
+
+sched status:
+  running_tid=3
+
+Thread 1: status = VgTs_WaitSys
+==13467==    at 0x722C71D: ??? (syscall-template.S:81)
+==13467==    by 0x71BA242: _IO_file_write@@GLIBC_2.2.5 (fileops.c:1262)
+==13467==    by 0x71BA121: new_do_write (fileops.c:538)
+==13467==    by 0x71BAB9D: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1346)
+==13467==    by 0x718EC93: buffered_vfprintf (vfprintf.c:2362)
+==13467==    by 0x718997D: vfprintf (vfprintf.c:1307)
+==13467==    by 0x7250A0D: __fprintf_chk (fprintf_chk.c:36)
+==13467==    by 0x44042C: PrintStatus(vfe::vfeSession*) (stdio2.h:98)
+==13467==    by 0x4122F0: main (unixconsole.cpp:566)
+
+Thread 2: status = VgTs_WaitSys
+==13467==    at 0x6F32940: sigwait (sigwait.c:64)
+==13467==    by 0x440786: SignalHandler() (unixconsole.cpp:144)
+==13467==    by 0x64FA949: ??? (in /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.53.0)
+==13467==    by 0x6F2AF6D: start_thread (pthread_create.c:311)
+==13467==    by 0x723A9CC: clone (clone.S:113)
+
+Thread 3: status = VgTs_Runnable
+==13467==    at 0x4C2A2DB: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==13467==    by 0x57274B: POVMS_Receive(void*, POVMSData*, POVMSData*, int) (povms.cpp:3261)
+==13467==    by 0x575FC6: POVMS_ProcessMessages(void*, bool, bool) (povms.cpp:691)
+==13467==    by 0x427475: vfe::vfeSession::WorkerThread() (vfesession.cpp:666)
+==13467==    by 0x64FA949: ??? (in /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.53.0)
+==13467==    by 0x6F2AF6D: start_thread (pthread_create.c:311)
+==13467==    by 0x723A9CC: clone (clone.S:113)
+
+Thread 4: status = VgTs_WaitSys
+==13467==    at 0x6F2F03E: pthread_cond_timedwait@@GLIBC_2.3.2 (pthread_cond_timedwait.S:238)
+==13467==    by 0x43218C: vfe::SysQNode::Receive(int*, bool) (condition_variable.hpp:360)
+==13467==    by 0x575D44: POVMS_ProcessMessages(void*, bool, bool) (povms.cpp:621)
+==13467==    by 0x450F6D: (anonymous namespace)::MainThreadFunction(boost::function0<void> const&) (povray.cpp:579)
+==13467==    by 0x64FA949: ??? (in /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.53.0)
+==13467==    by 0x6F2AF6D: start_thread (pthread_create.c:311)
+==13467==    by 0x723A9CC: clone (clone.S:113)
+
+Thread 5: status = VgTs_WaitSys
+==13467==    at 0x6F2EC84: pthread_cond_wait@@GLIBC_2.3.2 (pthread_cond_wait.S:185)
+==13467==    by 0x51F93F: void boost::condition_variable_any::wait<boost::unique_lock<boost::recursive_mutex> >(boost::unique_lock<boost::recursive_mutex>&) (condition_variable.hpp:184)
+==13467==    by 0x51EB60: pov::TaskQueue::Process() (taskqueue.cpp:305)
+==13467==    by 0x47DE67: pov::Scene::ParserControlThread() (scene.cpp:742)
+==13467==    by 0x64FA949: ??? (in /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.53.0)
+==13467==    by 0x6F2AF6D: start_thread (pthread_create.c:311)
+==13467==    by 0x723A9CC: clone (clone.S:113)
+
+Thread 6: status = VgTs_WaitSys
+==13467==    at 0x6F2EC84: pthread_cond_wait@@GLIBC_2.3.2 (pthread_cond_wait.S:185)
+==13467==    by 0x51F93F: void boost::condition_variable_any::wait<boost::unique_lock<boost::recursive_mutex> >(boost::unique_lock<boost::recursive_mutex>&) (condition_variable.hpp:184)
+==13467==    by 0x51EB60: pov::TaskQueue::Process() (taskqueue.cpp:305)
+==13467==    by 0x483297: pov::View::RenderControlThread() (view.cpp:1455)
+==13467==    by 0x64FA949: ??? (in /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.53.0)
+==13467==    by 0x6F2AF6D: start_thread (pthread_create.c:311)
+==13467==    by 0x723A9CC: clone (clone.S:113)
+
+
+Note: see also the FAQ in the source distribution.
+It contains workarounds to several common problems.
+In particular, if Valgrind aborted or crashed after
+identifying problems in your program, there's a good chance
+that fixing those problems will prevent Valgrind aborting or
+crashing, especially if it happened in m_mallocfree.c.
+
+If that doesn't help, please report this bug to: www.valgrind.org
+
+In the bug report, send all the above text, the valgrind
+version, and what OS and version you are using.  Thanks.
+
