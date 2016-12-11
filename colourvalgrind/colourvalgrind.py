@@ -169,33 +169,37 @@ r" \(\s* (?P<PARAMETER_TYPE_LIST> (?&_TYPE_) (?: \s* , \s* (?&_TYPE_) )* )? \s*\
         if match:
             # C++ functions
             if match.group('NAME'):
-                func = re.sub(re.escape(match.group('NAME')) + r"(?=\s*[\(<])",
-                              Fore.LIGHTCYAN_EX + Style.BRIGHT +
-                              match.group('NAME') +
-                              Style.RESET_ALL,
-                              func)
+                name = match.group('NAME')
+                func = _rreplace(func, name,
+                                 Fore.LIGHTCYAN_EX + Style.BRIGHT +
+                                 name +
+                                 Style.RESET_ALL)
             #if match.group('NAMESPACE'):
             #    func = re.sub(match.group('NAMESPACE'),
             #                  Fore.LIGHTWHITE_EX + match.group('NAMESPACE') +
             #                  Style.RESET_ALL,
             #                  func)
             if match.group('QUALIFIER'):
-                func = re.sub(re.escape(match.group('QUALIFIER')),
-                              Fore.LIGHTGREEN_EX +
-                              match.group('QUALIFIER') +
-                              Style.RESET_ALL,
-                              func)
+                qual = match.group('QUALIFIER')
+                func = _rreplace(func, qual,
+                                 Fore.LIGHTGREEN_EX +
+                                 qual +
+                                 Style.RESET_ALL)
         elif cpp_operator_overload.match(func):
             # operator overloads
             match = cpp_operator_overload.match(func)
-            func = re.sub(re.escape(match.group('NAME')),
-                          Fore.LIGHTCYAN_EX + Style.BRIGHT +
-                          match.group('NAME') +
-                          Style.RESET_ALL,
-                          func)
+            op = match.group('NAME')
+
+            func = _rreplace(func, op,
+                             Fore.LIGHTCYAN_EX + Style.BRIGHT +
+                             op +
+                             Style.RESET_ALL)
         elif re.match(r"^[A-Za-z_][A-Za-z0-9_.]*$", func):
             # C functions
             func = Fore.LIGHTBLUE_EX + Style.BRIGHT + func + Style.RESET_ALL
+        else:
+            # ???
+            func = Back.RED + Fore.BLACK + func + Style.RESET_ALL
 
         return func
 
@@ -260,6 +264,10 @@ _PROGRAM = 0
 _VALGRIND = 1
 _prev_output = None
 _curr_output = None
+
+def _rreplace(s, old, new, count=1):
+    li = s.rsplit(old, count)
+    return new.join(li)
 
 def _get_terminal_size():
     import fcntl, termios, struct
