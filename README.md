@@ -1,5 +1,19 @@
 A python wrapper for Valgrind that colours the output for better readability.
 
+Available on pypi here https://pypi.python.org/pypi/colour-valgrind/
+
+Installation
+------------
+
+```
+pip install colour-valgrind
+```
+
+or from the root dir (after cloning):
+```
+pip install -e .
+```
+
 Usage
 -----
 
