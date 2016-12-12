@@ -134,19 +134,23 @@ r"  (?P<_TEMPLATE_ARGLIST_> (?&_TEMPLATE_ARG_) (?: \s* , \s* (?&_TEMPLATE_ARG_))
 r")")
 
         cpp_func_signature = re.compile(
-r" (?P<RETURN_TYPE> (?&_TYPE_) \s )?"
-r" \s*"
-r" (?P<NAMESPACE> (?&_NAMESPACE_) )?"
+r" (?P<PRE_FUNC_NAME>"
+r"  (?P<RETURN_TYPE> (?&_TYPE_) \s )?"
+r"  \s*"
+r"  (?P<NAMESPACE> (?&_NAMESPACE_) )?"
+r" )"
 r" (?P<NAME> (?&_ID_) )"
-r" \s*"
-r" (?:"
+r" (?P<POST_FUNC_NAME>"
+r"  \s*"
+r"  (?:"
 r"   <\s* (?P<TEMPLATE_TYPE_LIST> (?&_TEMPLATE_ARG_) (?: \s* , \s* (?&_TEMPLATE_ARG_) )* )? \s*>"
-r" )?"
-r" \s*"
-r" \(\s* (?P<PARAMETER_TYPE_LIST> (?&_TYPE_) (?: \s* , \s* (?&_TYPE_) )* (?: \s* , \s* \.\.\. )? )? \s*\)"
-r" (?:"
-r"   (?P<QUALIFIER> \s+ (?&_CV_QUALIFIER_)? )"
-r" )?"
+r"  )?"
+r"  \s*"
+r"  \(\s* (?P<PARAMETER_TYPE_LIST> (?&_TYPE_) (?: \s* , \s* (?&_TYPE_) )* (?: \s* , \s* \.\.\. )? )? \s*\)"
+r"  (?:"
+r"    (?P<QUALIFIER> \s+ (?&_CV_QUALIFIER_)? )"
+r"  )?"
+r" )"
 + cpp_grammar, re.VERBOSE)
 
         cpp_operator_overload = re.compile(
@@ -169,16 +173,14 @@ r" \(\s* (?P<PARAMETER_TYPE_LIST> (?&_TYPE_) (?: \s* , \s* (?&_TYPE_) )* )? \s*\
         if match:
             # C++ functions
             if match.group('NAME'):
+                pre = match.group('PRE_FUNC_NAME')
                 name = match.group('NAME')
-                func = _rreplace(func, name,
-                                 Fore.LIGHTCYAN_EX + Style.BRIGHT +
-                                 name +
-                                 Style.RESET_ALL)
-            #if match.group('NAMESPACE'):
-            #    func = re.sub(match.group('NAMESPACE'),
-            #                  Fore.LIGHTWHITE_EX + match.group('NAMESPACE') +
-            #                  Style.RESET_ALL,
-            #                  func)
+                post = match.group('POST_FUNC_NAME')
+                func = (pre +
+                        Fore.LIGHTCYAN_EX + Style.BRIGHT +
+                        name +
+                        Style.RESET_ALL +
+                        post)
             if match.group('QUALIFIER'):
                 qual = match.group('QUALIFIER')
                 func = _rreplace(func, qual,
@@ -217,6 +219,7 @@ class Summary(Filter):
             output += Fore.LIGHTGREEN_EX + header
         else:
             output += Fore.GREEN + header
+        # highlight numbers
         text = re.sub(r"\b([0-9][0-9,\.]*)\b",
                       Fore.MAGENTA + r"\1" + Fore.RESET,
                       match.group('text'))
