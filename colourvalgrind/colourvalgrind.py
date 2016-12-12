@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-import regex as re
 from collections import OrderedDict
 
+import regex as re
+import six
 from colorama import Fore, Back, Style
 
 
@@ -290,14 +291,16 @@ def colour_valgrind(output):
         _curr_output = _VALGRIND
 
     if _prev_output is not None and _curr_output != _prev_output:
-        print Fore.LIGHTBLACK_EX + "="*_get_terminal_size()[0] + Style.RESET_ALL
+        print(Fore.LIGHTBLACK_EX +
+              "="*_get_terminal_size()[0] +
+              Style.RESET_ALL)
 
     # abort if the line isn't from valgrind
     if _curr_output == _PROGRAM:
         return output
 
     # loop through our line matchers and apply the first matching style
-    for (regex, obj) in _line_filters.iteritems():
+    for (regex, obj) in six.iteritems(_line_filters):
         match = regex.match(output)
         if match:
             output = obj.filter(match)
