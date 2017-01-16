@@ -22,7 +22,7 @@ def main():
         cmd.extend(valgrind_args)
         s = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         for line in iter(s.stdout.readline, b''):
-            print(colour_valgrind(line.rstrip('\n')))
+            print(colour_valgrind(line.rstrip(b'\n').decode('utf-8')))
 
         sys.exit(s.returncode)
 

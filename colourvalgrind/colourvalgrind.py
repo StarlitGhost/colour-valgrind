@@ -9,26 +9,38 @@ from colorama import Fore, Back, Style
 
 _line_filters = OrderedDict()
 
-def _register_filter(obj):
-    _line_filters[obj.regex] = obj
+def _register_filter(filt):
+    _line_filters[filt.__class__.__name__] = filt
 
 class Filter(object):
     regex = None
+    priority = 0
 
     def __init__(self):
-        assert self.regex is not None, (
-                "'{}' filter not implemented".format(self.__name__))
+        self._notImplemented = (
+                "'{}' filter not implemented".format(self.__class__.__name__))
+        assert self.regex is not None, self._notImplemented
         _register_filter(self)
 
-    def filter(self, match):
-        assert False, "'{}' filter not implemented".format(self.__name__)
+    def match(self, line):
+        assert self.regex is not None, self._notImplemented
+        return self.regex.match(line)
+
+    def apply(self, match):
+        assert False, self._notImplemented
+
+    def __eq__(self, other):
+        return self.regex == other.regex
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
 
 def init_filters():
     for f in Filter.__subclasses__():
         f()
 
 def _prefix(match):
-    return Fore.LIGHTBLACK_EX + match.group('prefix') + Fore.RESET
+    return Fore.LIGHTBLACK_EX + match.group('prefix') + Style.RESET_ALL
 
 class ByAt(Filter):
     regex = re.compile(r"^"
@@ -38,12 +50,12 @@ class ByAt(Filter):
                        r"(?: \((?P<loc>[^\)]+)\))?"
                        r"$")
 
-    def filter(self, match):
+    def apply(self, match):
         output = _prefix(match)
         output += Fore.YELLOW + match.group('byat')
 
         func = self.func_signature(match.group('func'))
-        output += Fore.RESET + func
+        output += Style.RESET_ALL + func
 
         if match.group('loc'):
             loc = match.group('loc')
@@ -57,10 +69,10 @@ class ByAt(Filter):
                                 r"(?:(?:\.[0-9]+)+)?)$",
                              loc)
             if loc_m:
-                loc = Fore.RESET + loc_m.group('in')
+                loc = Style.RESET_ALL + loc_m.group('in')
                 loc += Fore.RED + loc_m.group('lib')
             output += Fore.LIGHTBLACK_EX + " ("
-            output += Fore.RESET + loc
+            output += Style.RESET_ALL + loc
             output += Fore.LIGHTBLACK_EX + ")"
 
         output += Style.RESET_ALL
@@ -140,7 +152,7 @@ r"  (?P<RETURN_TYPE> (?&_TYPE_) \s )?"
 r"  \s*"
 r"  (?P<NAMESPACE> (?&_NAMESPACE_) )?"
 r" )"
-r" (?P<NAME> (?&_ID_) )"
+r" (?P<FUNC_NAME> (?&_ID_) )"
 r" (?P<POST_FUNC_NAME>"
 r"  \s*"
 r"  (?:"
@@ -156,26 +168,37 @@ r" )"
 
         cpp_operator_overload = re.compile(
 r" (?:"
-r"   operator"
-r"   \s+"
-r"   (?P<NAME>"
-r"     [^\W]{1,3}"
+r"   (?P<PRE_OP_NAME>"
+r"    (?P<RETURN_TYPE> (?&_TYPE_) \s )?"
+r"    \s*"
+r"    (?P<NAMESPACE> (?&_NAMESPACE_) )?"
+r"    operator"
+r"   )"
+r"   (?P<OP_NAME>"
+r"     \W+(?=\s|\(|$)"
 r"     |"
-r"     (?:new|delete) \s* (?:\[\])?"
+r"     \s+ (?:new|delete) \s* (?:\[\])?"
 r"     |"
-r"     (?&_TYPE_)"
+r"     \s+ (?&_TYPE_)"
 r"   )"
 r" )"
-r" \s*"
-r" \(\s* (?P<PARAMETER_TYPE_LIST> (?&_TYPE_) (?: \s* , \s* (?&_TYPE_) )* )? \s*\)"
+r" (?P<POST_OP_NAME>"
+r"  \s*"
+r"  (?:"
+r"   <\s* (?P<TEMPLATE_TYPE_LIST> (?&_TEMPLATE_ARG_) (?: \s* , \s* (?&_TEMPLATE_ARG_) )* )? \s*>"
+r"  )?"
+r"  (?:"
+r"   \(\s* (?P<PARAMETER_TYPE_LIST> (?&_TYPE_) (?: \s* , \s* (?&_TYPE_) )* )? \s*\)"
+r"  )?"
+r" )"
 + cpp_grammar, re.VERBOSE)
 
         match = cpp_func_signature.match(func)
         if match:
             # C++ functions
-            if match.group('NAME'):
+            if match.group('FUNC_NAME'):
                 pre = match.group('PRE_FUNC_NAME')
-                name = match.group('NAME')
+                name = match.group('FUNC_NAME')
                 post = match.group('POST_FUNC_NAME')
                 func = (pre +
                         Fore.LIGHTCYAN_EX + Style.BRIGHT +
@@ -191,12 +214,14 @@ r" \(\s* (?P<PARAMETER_TYPE_LIST> (?&_TYPE_) (?: \s* , \s* (?&_TYPE_) )* )? \s*\
         elif cpp_operator_overload.match(func):
             # operator overloads
             match = cpp_operator_overload.match(func)
-            op = match.group('NAME')
-
-            func = _rreplace(func, op,
-                             Fore.LIGHTCYAN_EX + Style.BRIGHT +
-                             op +
-                             Style.RESET_ALL)
+            pre = match.group('PRE_OP_NAME')
+            op = match.group('OP_NAME')
+            post = match.group('POST_OP_NAME')
+            func = (pre +
+                    Fore.LIGHTCYAN_EX + Style.BRIGHT +
+                    op +
+                    Style.RESET_ALL +
+                    post)
         elif re.match(r"^[A-Za-z_][A-Za-z0-9_.]*$", func):
             # C functions
             func = Fore.LIGHTBLUE_EX + Style.BRIGHT + func + Style.RESET_ALL
@@ -213,7 +238,7 @@ class Summary(Filter):
                        r"(?P<text>.*)"
                        r"$")
 
-    def filter(self, match):
+    def apply(self, match):
         output = _prefix(match)
         header = match.group('header')
         if re.match(r"^[A-Z ]+:$", header):
@@ -222,9 +247,9 @@ class Summary(Filter):
             output += Fore.GREEN + header
         # highlight numbers
         text = re.sub(r"\b([0-9][0-9,\.]*)\b",
-                      Fore.MAGENTA + r"\1" + Fore.RESET,
+                      Fore.MAGENTA + r"\1" + Style.RESET_ALL,
                       match.group('text'))
-        output += Fore.RESET + text
+        output += Style.RESET_ALL + text
 
         output += Style.RESET_ALL
         return output
@@ -235,7 +260,7 @@ class Error(Filter):
                        r"(?P<error>\S.+)"
                        r"$")
 
-    def filter(self, match):
+    def apply(self, match):
         output = _prefix(match)
         output += Fore.LIGHTRED_EX + Style.BRIGHT + match.group('error')
 
@@ -248,7 +273,7 @@ class Info(Filter):
                        r"(?P<info>\S.+)"
                        r"$")
 
-    def filter(self, match):
+    def apply(self, match):
         output = _prefix(match)
         output += Fore.LIGHTBLUE_EX + Style.BRIGHT + match.group('info')
 
@@ -260,7 +285,7 @@ class Blank(Filter):
                        r"(?P<prefix>==\d+== *)"
                        r"$")
 
-    def filter(self, match):
+    def apply(self, match):
         output = _prefix(match)
         return output
 
@@ -300,10 +325,10 @@ def colour_valgrind(output):
         return output
 
     # loop through our line matchers and apply the first matching style
-    for (regex, obj) in six.iteritems(_line_filters):
-        match = regex.match(output)
+    for (name, filt) in six.iteritems(_line_filters):
+        match = filt.match(output)
         if match:
-            output = obj.filter(match)
+            output = filt.apply(match)
             break
 
     return output
