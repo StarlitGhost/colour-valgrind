@@ -16,9 +16,9 @@ config = {
     'version': '0.3.8',
     'description': 'Wraps Valgrind to colour the output.',
     'long_description': read_md('README.md'),
-    'author': 'Matthew Cox',
-    'url': 'http://github.com/MatthewCox/colour-valgrind',
-    'author_email': 'matthewcpcox@gmail.com',
+    'author': 'Hannah Cox',
+    'url': 'http://github.com/StarlitGhost/colour-valgrind',
+    'author_email': 'starlitwraith@gmail.com',
     'classifiers': [
         'Development Status :: 3 - Alpha',
         'Environment :: Console',
