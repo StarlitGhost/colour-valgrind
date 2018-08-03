@@ -13,7 +13,7 @@ except ImportError:
 
 config = {
     'name': 'colour-valgrind',
-    'version': '0.3.8',
+    'version': '0.3.9',
     'description': 'Wraps Valgrind to colour the output.',
     'long_description': read_md('README.md'),
     'author': 'StarlitGhost',
