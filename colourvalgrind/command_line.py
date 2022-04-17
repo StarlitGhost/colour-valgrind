@@ -21,7 +21,11 @@ def main():
         cmd = ['valgrind']
         cmd.extend(valgrind_args)
         s = subprocess.Popen(cmd, stderr=subprocess.PIPE)
-        for line in iter(s.stderr.readline, b''):
+        try:
+            for line in iter(s.stderr.readline, b''):
+                print(colour_valgrind(line.rstrip(b'\n').decode('utf-8')))
+        except KeyboardInterrupt:
+            for line in s.stderr.readlines():
                 print(colour_valgrind(line.rstrip(b'\n').decode('utf-8')))
 
         sys.exit(s.wait())
