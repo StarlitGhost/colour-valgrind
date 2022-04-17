@@ -24,7 +24,7 @@ def main():
         for line in iter(s.stdout.readline, b''):
             print(colour_valgrind(line.rstrip(b'\n').decode('utf-8')))
 
-        sys.exit(s.returncode)
+        sys.exit(s.wait())
 
 if __name__ == "__main__":
     main()
